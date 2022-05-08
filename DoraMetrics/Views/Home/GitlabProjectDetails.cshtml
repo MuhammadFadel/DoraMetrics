@@ -1,0 +1,79 @@
+﻿@model DoraMetrics.Models.GitlabProjectDto
+
+@{
+    ViewData["Title"] = "Gitlab Project Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ProjectDetails</h1>
+
+<div>
+    <h4>ProjectDto</h4>
+    <hr />    
+            
+    <dl class="row">        
+        <dt class = "col-sm-2">
+            <img src="@Model.owner.avatar_url" class="card-img-top" >
+        </dt>      
+        <dd class = "col-sm-10">
+            
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.owner.name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.owner.name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.owner.web_url)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.owner.web_url)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.created_at)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_at)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.http_url_to_repo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.http_url_to_repo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.last_activity_at)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.last_activity_at)
+        </dd>                
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.import_url)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.import_url)
+        </dd>        
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.default_branch)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.default_branch)
+        </dd>          
+    </dl>
+</div>
+<div>    
+    <a asp-action="Index">Back to List</a>
+</div>
