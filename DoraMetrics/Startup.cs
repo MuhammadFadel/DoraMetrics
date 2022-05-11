@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DoraMetrics
 {
@@ -26,10 +27,16 @@ namespace DoraMetrics
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+                //.AddNewtonsoftJson(options =>
+                //{
+                //    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //}); 
 
             services.AddHttpClient<IGitlabService, GitlabService>();
             SD.GitlabApiBase = Configuration["GitlabService:GitlabApiUrl"];
             services.AddScoped<IGitlabService, GitlabService>();
+
+
 
         }
 

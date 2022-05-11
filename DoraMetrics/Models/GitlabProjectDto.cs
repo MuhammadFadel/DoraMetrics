@@ -7,8 +7,6 @@ namespace DoraMetrics.Models
 {
     public class GitlabProjectDto
     {
-
-
         public int id { get; set; }
         public string description { get; set; }
         public string default_branch { get; set; }
@@ -20,6 +18,7 @@ namespace DoraMetrics.Models
         public List<string> tag_list { get; set; }
         public List<string> topics { get; set; }
         public Owner owner { get; set; }
+        public DoraMetricsAnalytics DoraMetricsAnalytics { get; set; }
         public string name { get; set; }
         public string name_with_namespace { get; set; }
         public string path { get; set; }
@@ -86,14 +85,13 @@ namespace DoraMetrics.Models
         public object service_desk_address { get; set; }
     }
 
-
     public class Owner
     {
         public int id { get; set; }
         public string name { get; set; }
         public string username { get; set; }
         public string state { get; set; }
-        public string avatar_url { get; set; }
+        public string? avatar_url { get; set; }
         public string web_url { get; set; }
         public DateTime created_at { get; set; }
     }
@@ -137,8 +135,8 @@ namespace DoraMetrics.Models
 
     public class ProjectAccess
     {
-        public int access_level { get; set; }
-        public int notification_level { get; set; }
+        public int? access_level { get; set; }
+        public int? notification_level { get; set; }
     }
 
     public class GroupAccess
@@ -152,7 +150,19 @@ namespace DoraMetrics.Models
         public ProjectAccess project_access { get; set; }
         public GroupAccess group_access { get; set; }
         public bool? canEdit { get; set; }
+    }    
+
+    public class DoraMetricsAnalytics
+    {
+        public List<MetricValue> DeploymentFrequency { get; set; }
+        public List<MetricValue> LeadTimeForChanges { get; set; }
+        public List<MetricValue> TimeToRestoreService { get; set; }
+        public List<MetricValue> ChangeFailureRate { get; set; }        
     }
 
-
+    public class MetricValue
+    {
+        public string date { get; set; }
+        public double? value { get; set; }
+    }
 }

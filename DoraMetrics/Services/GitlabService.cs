@@ -23,7 +23,7 @@ namespace DoraMetrics.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.GET,
-                ApiUrl = SD.GitlabApiBase + "projects" + "?owned=true",
+                ApiUrl = SD.GitlabApiBase + "projects" + "?min_access_level=40",
                 AccessToken = token
             });
         }
