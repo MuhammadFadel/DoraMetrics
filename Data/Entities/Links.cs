@@ -1,0 +1,22 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Data.Entities
+{
+    public class Links
+    {
+        [Key]
+        public int Id { get; set; }
+        [ForeignKey("Project")]
+        public int ProjectId { get; set; }
+        public Project Project { get; set; }
+        public string Self { get; set; }
+        public string Issues { get; set; }
+        public string MergeRequests { get; set; }
+        public string RepoBranches { get; set; }
+        public string Labels { get; set; }
+        public string Events { get; set; }
+        public string Members { get; set; }
+        public string ClusterAgents { get; set; }
+    }
+}

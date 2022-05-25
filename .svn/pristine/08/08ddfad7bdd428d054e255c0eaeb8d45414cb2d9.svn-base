@@ -1,0 +1,20 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DoraMetrics.Models
+{
+    public class ProjectNamespace
+    {
+        [Key]        
+        public int Id { get; set; }
+        public int GitlabNamespaceId { get; set; }
+        public List<Project> Projects { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public string Kind { get; set; }
+        public string FullPath { get; set; }
+        public string AvatarUrl { get; set; }
+        public string WebUrl { get; set; }
+    }
+}

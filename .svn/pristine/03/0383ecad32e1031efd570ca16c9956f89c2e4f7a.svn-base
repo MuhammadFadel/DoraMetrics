@@ -1,0 +1,37 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+
+@model IEnumerable<GitlabProjectDto>
+
+<div class="container row">
+
+	@foreach (var project in Model)
+	{
+	 <div class="col-4 ">
+	  <div class="p-0 my-3 border">
+	   <div class="card">
+					@if (project.owner != null && !String.IsNullOrEmpty(project.owner.avatar_url))
+					{
+						<img src="@project.owner.avatar_url" class="card-img-top">
+					}else{
+						<img src="~/581057-200.png" class="card-img-top">
+					}
+
+		<div class="card-body">
+		 <h3 class="card-title text-success">@project.name</h3>
+		 <h4 class="card-title text-primary">@project.name_with_namespace</h4>
+		 <p class="card-text">@project.description</p>
+		 <div class="row">
+		  <div class="col">
+		   <a asp-controller="Home" asp-action="GitlabProjectDetails" asp-route-id="@project.id"
+							   class="btn btn-success form-control">Details</a>
+		  </div>
+		 </div>
+		</div>
+	   </div>
+	  </div>
+	 </div>
+	}
+
+</div>

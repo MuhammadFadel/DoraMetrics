@@ -1,0 +1,31 @@
+﻿using DoraMetrics.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace DoraMetrics.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+
+        }
+
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Links> Links{ get; set; }
+        public DbSet<Permissions> Permissions{ get; set; }
+        public DbSet<AccessInfo> AccessInfos{ get; set; }
+        public DbSet<Metrics> Metrics { get; set; }
+        public DbSet<MetricData> MetricData { get; set; }
+        public DbSet<ProjectNamespace> ProjectNamespaces { get; set; }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    // Configure Student & StudentAddress entity
+        //    modelBuilder.Entity<Permissions>()
+        //        .HasOne(c => c.ProjectAccess).WithOne(p => p.ProjectAccessId)
+        //                .HasOptional(s => s.Address) // Mark Address property optional in Student entity
+        //                .WithRequired(ad => ad.Student); // mark Student property as required in StudentAddress entity. Cannot save StudentAddress without Student
+        //}
+    }
+}

@@ -1,0 +1,40 @@
+﻿@using DoraMetrics.DTOs
+@model IEnumerable<Project>
+
+@{
+	ViewData["Title"] = "Home Page";
+}
+
+
+
+<div class="container row">
+
+	@foreach (var project in Model)
+	{
+	 <div class="col-4 ">
+	  <div class="p-0 my-3 border">
+	   <div class="card">
+					@if (!String.IsNullOrEmpty(project.AvatarUrl))
+					{
+						<img src="@project.AvatarUrl" class="card-img-top">
+					}else{
+						<img src="~/581057-200.png" class="card-img-top">
+					}
+
+		<div class="card-body">
+		 <h3 class="card-title text-success">@project.Name</h3>
+		 <h4 class="card-title text-primary">@project.Namespace.Name</h4>
+		 <p class="card-text">@project.Description</p>
+		 <div class="row">
+		  <div class="col">
+		   <a asp-controller="Home" asp-action="GitlabProjectDetails" asp-route-id="@project.GitlabProjectId"
+							   class="btn btn-success form-control">Details</a>
+		  </div>
+		 </div>
+		</div>
+	   </div>
+	  </div>
+	 </div>
+	}
+
+</div>

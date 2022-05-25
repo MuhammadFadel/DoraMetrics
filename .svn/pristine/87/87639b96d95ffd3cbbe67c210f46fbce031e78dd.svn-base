@@ -1,0 +1,18 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Data.Entities
+{
+    public class Permissions
+    {
+        [Key]
+        public int Id { get; set; }
+        [ForeignKey("Project")]
+        public int ProjectId { get; set; }
+        public Project Project { get; set; }
+        [ForeignKey("ProjectAccessId")]
+        public virtual AccessInfo ProjectAccess { get; set; }
+        [ForeignKey("GroupAccessId")]
+        public virtual AccessInfo GroupAccess { get; set; }                
+    }
+}

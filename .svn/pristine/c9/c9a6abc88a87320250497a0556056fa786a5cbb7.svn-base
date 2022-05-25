@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32505.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoraMetrics", "DoraMetrics\DoraMetrics.csproj", "{83BB88B0-28F0-4D14-96B9-C43386A77DE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Integrations", "Integrations\Integrations.csproj", "{D8934059-8CF6-4B6F-A01C-ED7086A095E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{85F0C76A-8D61-4DE7-83E9-82E0304904E2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83BB88B0-28F0-4D14-96B9-C43386A77DE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83BB88B0-28F0-4D14-96B9-C43386A77DE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83BB88B0-28F0-4D14-96B9-C43386A77DE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83BB88B0-28F0-4D14-96B9-C43386A77DE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8934059-8CF6-4B6F-A01C-ED7086A095E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8934059-8CF6-4B6F-A01C-ED7086A095E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8934059-8CF6-4B6F-A01C-ED7086A095E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8934059-8CF6-4B6F-A01C-ED7086A095E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85F0C76A-8D61-4DE7-83E9-82E0304904E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85F0C76A-8D61-4DE7-83E9-82E0304904E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85F0C76A-8D61-4DE7-83E9-82E0304904E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85F0C76A-8D61-4DE7-83E9-82E0304904E2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {3207E7D2-46A0-4BFD-A35E-16CB52560D02}
+	EndGlobalSection
+EndGlobal

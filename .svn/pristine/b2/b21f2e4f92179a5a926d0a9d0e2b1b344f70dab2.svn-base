@@ -1,0 +1,100 @@
+﻿using DoraMetrics.Helpers;
+using DoraMetrics.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace DoraMetrics.Data.Repos
+{
+    public class ProjectRepo : IProjectRepo
+    {
+        private readonly ApplicationDbContext _context;
+        public ProjectRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Project> GetProject(int id)
+        {
+            var product = await _context.Projects
+                                .Include(ow => ow.Owner)
+                                .Include(pr => pr.Permissions)
+                                .Include(st => st.Statistics)
+                                .Include(mt => mt.Metrics)
+                                .Include(ns => ns.Namespace)
+                                .Include(li => li.Links)
+                                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return product;
+        }
+        public async Task<Project> GetProjectWithGitlabId(int id)
+        {
+            var product = await _context.Projects
+                                .Include(ow => ow.Owner)
+                                .Include(pr => pr.Permissions)
+                                .Include(st => st.Statistics)
+                                .Include(mt => mt.Metrics)
+                                .Include(ns => ns.Namespace)
+                                .Include(li => li.Links)
+                                .FirstOrDefaultAsync(p => p.GitlabProjectId == id);
+
+            return product;
+        }
+
+        public async Task<PagedList<Project>> GetProjects(ProjectParams projectParams)
+        {
+            var products = _context.Projects
+                            .Include(ow => ow.Owner)
+                                .Include(pr => pr.Permissions)
+                                .Include(st => st.Statistics)
+                                .Include(mt => mt.Metrics)
+                                .Include(ns => ns.Namespace)
+                                .Include(li => li.Links)
+                            .AsQueryable();
+
+            if (!string.IsNullOrEmpty(projectParams.OrderBy))
+            {
+                switch (projectParams.OrderBy)
+                {
+                    case "LastActivityAt":
+                        products = products.OrderByDescending(p => p.LastActivityAt);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return await PagedList<Project>.CreateAsync(products, projectParams.PageNumber, projectParams.PageSize);
+        }
+
+        
+
+        //public async Task<PagedList<UserProducts>> GetUserProducts(UserProductsParams userProductsParams)
+        //{
+        //    var userProducts = _context.UserProducts.AsQueryable();
+
+        //    if (userProductsParams.UserId != null)
+        //        userProducts = userProducts.Where(up => up.UserId != userProductsParams.UserId);
+
+        //    if (!string.IsNullOrEmpty(userProductsParams.OrderBy))
+        //    {
+        //        switch (userProductsParams.OrderBy)
+        //        {
+        //            case "RequestTime":
+        //                userProducts = userProducts.OrderByDescending(p => p.RequestTime);
+        //                break;
+        //            default:
+        //                break;
+        //        }
+        //    }
+        //    return await PagedList<UserProducts>.CreateAsync(userProducts, userProductsParams.PageNumber, userProductsParams.PageSize);
+        //}
+
+
+        //public async Task<UserProducts> GetUserProduct(Guid id)
+        //{
+        //    var userProduct = await _context.UserProducts.FirstOrDefaultAsync(p => p.Id == id);
+        //    return userProduct;
+        //}
+    }
+}

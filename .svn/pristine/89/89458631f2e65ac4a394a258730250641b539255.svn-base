@@ -1,0 +1,33 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace DoraMetrics.Migrations
+{
+    public partial class EditAccessInfoForeignKey : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "GroupAccessId",
+                table: "AccessInfos");
+
+            migrationBuilder.DropColumn(
+                name: "ProjectAccessId",
+                table: "AccessInfos");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<int>(
+                name: "GroupAccessId",
+                table: "AccessInfos",
+                type: "int",
+                nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "ProjectAccessId",
+                table: "AccessInfos",
+                type: "int",
+                nullable: true);
+        }
+    }
+}

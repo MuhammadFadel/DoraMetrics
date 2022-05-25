@@ -1,0 +1,15 @@
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace DoraMetrics.Models
+{
+    public class Metrics
+    {
+        [Key]
+        public int Id { get; set; }
+        public List<MetricData> DeploymentFrequency { get; set; }
+        public List<MetricData> LeadTimeForChanges { get; set; }
+        public List<MetricData> TimeToRestoreService { get; set; }
+        public List<MetricData> ChangeFailureRate { get; set; }
+    }
+}

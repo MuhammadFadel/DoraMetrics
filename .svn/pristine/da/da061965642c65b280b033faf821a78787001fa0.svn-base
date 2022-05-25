@@ -1,0 +1,20 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DoraMetrics.Models
+{
+    public class Statistics
+    {
+        [Key]
+        public int Id { get; set; }
+        public int CommitCount { get; set; }
+        public int StorageSize { get; set; }
+        public int RpositorySize { get; set; }
+        public int WikiSize { get; set; }
+        public int LfsObjectsSize { get; set; }
+        public int JobArtifactsSize { get; set; }
+        public int PipelineArtifactsSize { get; set; }
+        public int PackagesSize { get; set; }
+        public int SnippetsSize { get; set; }
+        public int UploadsSize { get; set; }
+    }
+}

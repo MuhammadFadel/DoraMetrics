@@ -1,0 +1,20 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DoraMetrics.Models
+{
+    public class Permissions
+    {
+        [Key]
+        public int Id { get; set; }                
+        public Project Project { get; set; }               
+        public Owner Owner { get; set; }
+        [ForeignKey("ProjectAccess")]
+        public int? ProjectAccessId { get; set; }
+        public AccessInfo ProjectAccess { get; set; }
+        [ForeignKey("GroupAccess")]
+        public int? GroupAccessId { get; set; }
+        public AccessInfo GroupAccess { get; set; }
+        
+    }
+}

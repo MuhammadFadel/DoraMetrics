@@ -1,0 +1,15 @@
+﻿using DoraMetrics.Helpers;
+using DoraMetrics.Models;
+using System.Threading.Tasks;
+
+namespace DoraMetrics.Data
+{
+    public interface IProjectRepo
+    {
+        Task<Project> GetProject(int id);
+        Task<Project> GetProjectWithGitlabId(int id);
+        Task<PagedList<Project>> GetProjects(ProjectParams projectParams);
+        //Task<PagedList<UserProducts>> GetUserProducts(UserProductsParams userParams);        
+        //Task<UserProducts> GetUserProduct(Guid id);
+    }
+}

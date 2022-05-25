@@ -1,0 +1,330 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+namespace DoraMetrics.Migrations
+{
+    public partial class IntializeProjectModule : Migration
+    {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "AccessInfos",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectAccessId = table.Column<int>(type: "int", nullable: true),
+                    GroupAccessId = table.Column<int>(type: "int", nullable: true),
+                    AccessLevel = table.Column<int>(type: "int", nullable: true),
+                    NotificationLevel = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccessInfos", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectNamespaces",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GitlabNamespaceId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Kind = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FullPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WebUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectNamespaces", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Projects",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GitlabProjectId = table.Column<int>(type: "int", nullable: false),
+                    NamespaceId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DefaultBranch = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Visibility = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SshUrlToRepo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    HttpUrlToRepo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WebUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReadmeUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NameWithNamespace = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PathWithNamespace = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IssuesEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    OpenIssuesCount = table.Column<int>(type: "int", nullable: false),
+                    MergeRequestsEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    JobsEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    WikiEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    SnippetsEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    CanCreateMergeRequestIn = table.Column<bool>(type: "bit", nullable: true),
+                    ResolveOutdatedDiffDiscussions = table.Column<bool>(type: "bit", nullable: true),
+                    ContainerRegistryEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    ContainerRegistryAccessLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityAndComplianceAccessLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastActivityAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<int>(type: "int", nullable: false),
+                    ImportUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImportType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImportStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Archived = table.Column<bool>(type: "bit", nullable: true),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SharedRunnersEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    ForksCount = table.Column<int>(type: "int", nullable: false),
+                    StarCount = table.Column<int>(type: "int", nullable: false),
+                    RunnersToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CiDefaultGitDepth = table.Column<int>(type: "int", nullable: false),
+                    CiForwardDeploymentEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    PublicJobs = table.Column<bool>(type: "bit", nullable: true),
+                    OnlyAllowMergeIfPipelineSucceeds = table.Column<bool>(type: "bit", nullable: true),
+                    AllowMergeOnSkippedPipeline = table.Column<bool>(type: "bit", nullable: true),
+                    RestrictUserDefinedVariables = table.Column<bool>(type: "bit", nullable: true),
+                    OnlyAllowMergeIfAllDiscussionsAreResolved = table.Column<bool>(type: "bit", nullable: true),
+                    RemoveSourceBranchAfterMerge = table.Column<bool>(type: "bit", nullable: true),
+                    RequestAccessEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    MergeMethod = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SquashOption = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AutocloseReferencedIssues = table.Column<bool>(type: "bit", nullable: true),
+                    SuggestionCommitMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MergeCommitTemplate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SquashCommitTemplate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MarkedForDeletionAt = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MarkedForDeletionOn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContainerRegistryImagePrefix = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImportError = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AutoDevopsEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    AutoDevopsDeployStrategy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RepositoryStorage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApprovalsBeforeMerge = table.Column<int>(type: "int", nullable: true),
+                    Mirror = table.Column<bool>(type: "bit", nullable: true),
+                    MirrorUserId = table.Column<int>(type: "int", nullable: true),
+                    MirrorTriggerBuilds = table.Column<bool>(type: "bit", nullable: true),
+                    OnlyMirrorProtectedBranches = table.Column<bool>(type: "bit", nullable: true),
+                    MirrorOverwritesDivergedBranches = table.Column<bool>(type: "bit", nullable: true),
+                    ExternalAuthorizationClassificationLabel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PackagesEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    ServiceDeskEnabled = table.Column<bool>(type: "bit", nullable: true),
+                    ServiceDeskAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Projects_ProjectNamespaces_NamespaceId",
+                        column: x => x.NamespaceId,
+                        principalTable: "ProjectNamespaces",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Links",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    Self = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Issues = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MergeRequests = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RepoBranches = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Labels = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Events = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Members = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ClusterAgents = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Links", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Links_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Metrics",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Metrics", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Metrics_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Permissions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProjectId = table.Column<int>(type: "int", nullable: false),
+                    ProjectAccessId = table.Column<int>(type: "int", nullable: true),
+                    GroupAccessId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Permissions_AccessInfos_GroupAccessId",
+                        column: x => x.GroupAccessId,
+                        principalTable: "AccessInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Permissions_AccessInfos_ProjectAccessId",
+                        column: x => x.ProjectAccessId,
+                        principalTable: "AccessInfos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Permissions_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MetricData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DeploymentFrequencyId = table.Column<int>(type: "int", nullable: true),
+                    LeadTimeForChangesId = table.Column<int>(type: "int", nullable: true),
+                    TimeToRestoreServiceId = table.Column<int>(type: "int", nullable: true),
+                    ChangeFailureRateId = table.Column<int>(type: "int", nullable: true),
+                    Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Value = table.Column<double>(type: "float", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MetricData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MetricData_Metrics_ChangeFailureRateId",
+                        column: x => x.ChangeFailureRateId,
+                        principalTable: "Metrics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MetricData_Metrics_DeploymentFrequencyId",
+                        column: x => x.DeploymentFrequencyId,
+                        principalTable: "Metrics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MetricData_Metrics_LeadTimeForChangesId",
+                        column: x => x.LeadTimeForChangesId,
+                        principalTable: "Metrics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MetricData_Metrics_TimeToRestoreServiceId",
+                        column: x => x.TimeToRestoreServiceId,
+                        principalTable: "Metrics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Links_ProjectId",
+                table: "Links",
+                column: "ProjectId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MetricData_ChangeFailureRateId",
+                table: "MetricData",
+                column: "ChangeFailureRateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MetricData_DeploymentFrequencyId",
+                table: "MetricData",
+                column: "DeploymentFrequencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MetricData_LeadTimeForChangesId",
+                table: "MetricData",
+                column: "LeadTimeForChangesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MetricData_TimeToRestoreServiceId",
+                table: "MetricData",
+                column: "TimeToRestoreServiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Metrics_ProjectId",
+                table: "Metrics",
+                column: "ProjectId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_GroupAccessId",
+                table: "Permissions",
+                column: "GroupAccessId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_ProjectAccessId",
+                table: "Permissions",
+                column: "ProjectAccessId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Permissions_ProjectId",
+                table: "Permissions",
+                column: "ProjectId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_NamespaceId",
+                table: "Projects",
+                column: "NamespaceId");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Links");
+
+            migrationBuilder.DropTable(
+                name: "MetricData");
+
+            migrationBuilder.DropTable(
+                name: "Permissions");
+
+            migrationBuilder.DropTable(
+                name: "Metrics");
+
+            migrationBuilder.DropTable(
+                name: "AccessInfos");
+
+            migrationBuilder.DropTable(
+                name: "Projects");
+
+            migrationBuilder.DropTable(
+                name: "ProjectNamespaces");
+        }
+    }
+}

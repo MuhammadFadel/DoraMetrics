@@ -1,0 +1,12 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DoraMetrics.Models
+{
+    public class MetricData
+    {
+        [Key]
+        public int Id { get; set; }
+        public string Date { get; set; }
+        public double? Value { get; set; }
+    }
+}

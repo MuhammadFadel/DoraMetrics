@@ -1,0 +1,39 @@
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System;
+using System.Reflection;
+
+namespace DoraMetrics.Helpers
+{
+    public static class Extensions
+    {
+        public static void AddPagination(this HttpResponse response,
+            int currentPage, int itemsPerPage, int totalItems, int totalPages)
+        {
+            var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
+            var camelCaseFormatter = new JsonSerializerSettings();
+            camelCaseFormatter.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            response.Headers.Add("Pagination",
+                JsonConvert.SerializeObject(paginationHeader, camelCaseFormatter));
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
+        }
+
+        public static void MappingUpdates<TSource, TDestination>(this TSource source, TDestination destination) 
+        {
+            foreach (PropertyInfo p in source.GetType().GetProperties())
+            {
+                if(!p.Name.Contains("Id"))
+                {
+                    if (p.PropertyType.FullName.Contains("System"))
+                        p.SetValue(source, p.GetValue(destination));                                            
+                    else if(p.GetValue(source) == null && p.GetValue(destination) != null)
+                        p.SetValue(source, p.GetValue(destination));
+                    else if (p.GetValue(source) != null && p.GetValue(destination) != null)
+                        p.GetValue(source).MappingUpdates(p.GetValue(destination));
+                }
+                
+            }
+        }
+    }
+}

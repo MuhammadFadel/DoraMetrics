@@ -1,0 +1,136 @@
+﻿@model DoraMetrics.Models.GitlabProjectDto
+@inject IJsonHelper Json
+@{                 
+    ViewData["Title"] = "Gitlab Project Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ProjectDetails</h1>
+
+<div>
+    <h4>ProjectDto</h4>
+    <hr />    
+            
+    <dl class="row">        
+        <dt class = "col-sm-2">            
+            @if (Model.owner != null && !String.IsNullOrEmpty(Model.owner.avatar_url))
+            { 
+                <img src="@Model.owner.avatar_url" class="card-img-top" >
+            }else
+            {
+                <img src="~/581057-200.png" class="card-img-top" >
+            }
+                
+        </dt>      
+        <dd class = "col-sm-10">
+            
+        </dd>                
+        <dt class = "col-sm-2">
+            Name
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.name)
+        </dd>
+        <dt class = "col-sm-2">
+            Description
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.description)
+        </dd>
+        <dt class = "col-sm-2">
+            Created At
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.created_at)
+        </dd>
+        <dt class = "col-sm-2">
+            Repo Url            
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.http_url_to_repo)
+        </dd>
+        <dt class = "col-sm-2">
+            last activity             
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.last_activity_at)
+        </dd>                             
+        <dt class = "col-sm-2">
+            Default Branch           
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.default_branch)
+        </dd>          
+    </dl>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <div style="text-align: center">  
+        <canvas id="LineCanvas" width="60px" height="30px" ></canvas>  
+    </div>
+
+    <script>  
+        var DoughnutChartData =  
+            {  
+                labels: @Json.Serialize( Model.DoraMetricsAnalytics.DeploymentFrequency.Select(d => d.date)),  
+
+                datasets: [{  
+                    label: 'Deployment Frequency',                      
+                    backgroundColor: "#f990a7",
+                    borderColor: "#f990a7",
+                   borderWidth: 2,  
+                    data: @Json.Serialize( Model.DoraMetricsAnalytics.DeploymentFrequency.Select(d => d.value))  
+                },
+                {
+                    label: 'Change Failure Rate',                      
+                    backgroundColor:"#aad2ed",
+                    borderColor: "#aad2ed",
+                    borderWidth: 2,  
+                    data: @Json.Serialize( Model.DoraMetricsAnalytics.ChangeFailureRate.Select(d => d.value))
+                    },
+                    
+                    {
+                    label: 'Lead Time For Changes',                      
+                    backgroundColor: "#9966FF",  
+                    borderColor: "#9966FF",
+                    borderWidth: 2,  
+                    data: @Json.Serialize( Model.DoraMetricsAnalytics.LeadTimeForChanges.Select(d => d.value))
+                    },
+                    
+                    {
+                    label: 'Time To Restore Service',                      
+                    backgroundColor: "#99e5e5",  
+                    borderColor: "#99e5e5",
+                    borderWidth: 2,  
+                    data: @Json.Serialize( Model.DoraMetricsAnalytics.TimeToRestoreService.Select(d => d.value))
+                    }]  
+            };  
+  
+            window.onload = function () {  
+                var ctx1 = document.getElementById("LineCanvas").getContext("2d");  
+                window.myBar = new Chart(ctx1,  
+                    {  
+                        type: 'line',  
+                        data: DoughnutChartData,  
+                        options:  
+                            {  
+                                scales: {
+                                            y: {
+                                                beginAtZero: true
+                                            }
+                                        },
+                                title:  
+                                {  
+                                    display: true,  
+                                    text: "Dora Metrics Analytics"  
+                                },  
+                                responsive: true,  
+                                maintainAspectRatio: true  
+                            }  
+                    });  
+            }  
+    </script>
+        
+<div>    
+    <a asp-action="Index">Back to List</a>
+</div>

@@ -1,0 +1,63 @@
+﻿using Data.Entities;
+using Helpers.Paginations;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Data.Repos
+{
+    public class ProjectRepo : IProjectRepo
+    {
+        private readonly ApplicationDbContext _context;
+        public ProjectRepo(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Project> GetProject(int id)
+        {
+            var product = await _context.Projects                                
+                                .Include(pr => pr.Permissions)                                
+                                .Include(mt => mt.Metrics)                                
+                                .Include(li => li.Links)
+                                .FirstOrDefaultAsync(p => p.Id == id);
+
+            return product;
+        }
+        public async Task<Project> GetProjectWithGitlabId(int id)
+        {
+            var product = await _context.Projects                                
+                                .Include(pr => pr.Permissions)                                
+                                .Include(mt => mt.Metrics)
+                                
+                                .Include(li => li.Links)
+                                .FirstOrDefaultAsync(p => p.GitlabProjectId == id);
+
+            return product;
+        }
+
+        public async Task<PagedList<Project>> GetProjects(ProjectParams projectParams)
+        {
+            var products = _context.Projects                            
+                                .Include(pr => pr.Permissions)                                
+                                .Include(mt => mt.Metrics)                                
+                                .Include(li => li.Links)
+                            .AsQueryable();
+
+            if (!string.IsNullOrEmpty(projectParams.OrderBy))
+            {
+                switch (projectParams.OrderBy)
+                {
+                    case "LastActivityAt":
+                        products = products.OrderByDescending(p => p.LastActivityAt);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            return await PagedList<Project>.CreateAsync(products, projectParams.PageNumber, projectParams.PageSize);
+        }
+                
+    }
+}
