@@ -10,6 +10,7 @@ namespace Data
         {
         }
 
+        public DbSet<Group> Groups { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Links> Links{ get; set; }
         public DbSet<Permissions> Permissions{ get; set; }

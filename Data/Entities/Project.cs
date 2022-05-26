@@ -13,6 +13,9 @@ namespace Data.Entities
         public Metrics Metrics { get; set; }                               
         public Links Links { get; set; }        
         public Permissions Permissions { get; set; }
+        [ForeignKey("Group")]
+        public int GroupId { get; set; }
+        public Group Group { get; set; }
         public string Description { get; set; }
         public string DefaultBranch { get; set; }
         public string Visibility { get; set; }        
