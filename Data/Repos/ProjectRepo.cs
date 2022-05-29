@@ -28,8 +28,7 @@ namespace Data.Repos
         {
             var product = await _context.Projects                                
                                 .Include(pr => pr.Permissions)                                
-                                .Include(mt => mt.Metrics)
-                                
+                                .Include(mt => mt.Metrics)                                
                                 .Include(li => li.Links)
                                 .FirstOrDefaultAsync(p => p.GitlabProjectId == id);
 
@@ -58,6 +57,11 @@ namespace Data.Repos
 
             return await PagedList<Project>.CreateAsync(products, projectParams.PageNumber, projectParams.PageSize);
         }
-                
+
+        public async Task<bool> ProjectIsExist(int id)
+        {
+            var group = await _context.Projects.FirstOrDefaultAsync(pr => pr.Id == id || pr.GitlabProjectId == id);
+            return (group != null) ? true : false;
+        }        
     }
 }

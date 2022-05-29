@@ -9,8 +9,11 @@ namespace Data.Entities
         [Key]
         public int Id { get; set; }
         [ForeignKey("Project")]
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
         public Project Project { get; set; }
+        [ForeignKey("Group")]
+        public int? GroupId { get; set; }
+        public Group Group { get; set; }
         [ForeignKey("DeploymentFrequencyId")]
         public List<MetricData> DeploymentFrequency { get; set; }
         [ForeignKey("LeadTimeForChangesId")]

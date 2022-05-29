@@ -1,5 +1,5 @@
 ﻿@using Data.Entities
-@model Project
+@model Group
 
 @inject IJsonHelper Json
 @{                 
@@ -7,10 +7,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>ProjectDetails</h1>
+<h1>Group Details</h1>
 
 <div>
-    <h4>ProjectDto</h4>
+    <h4>Group Info</h4>
     <hr />    
             
     <dl class="row">        
@@ -26,15 +26,15 @@
         </dt>      
         <dd class = "col-sm-10">
             
-        </dd>        
+        </dd>
         <dt class = "col-sm-2">
             Parent ID            
         </dt>
         <dd class = "col-sm-10">
-            @if(Model.GroupId != 0)
+            @if(Model.ParentId != null)
             {
-                <a asp-controller="Home" asp-action="GitlabGroupDetails" asp-route-id="@Model.GroupId"
-							   class="btn btn-link text-left form-control">@Model.GroupId</a>
+                <a asp-controller="Home" asp-action="GitlabGroupDetails" asp-route-id="@Model.ParentId"
+							   class="btn btn-link text-left form-control">@Model.ParentId</a>
             }else{
                 @Html.Raw("None");
             }
@@ -45,6 +45,12 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            Full Name            
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FullName)
         </dd>
         <dt class = "col-sm-2">
             Description
@@ -59,22 +65,17 @@
             @Html.DisplayFor(model => model.CreatedAt)
         </dd>
         <dt class = "col-sm-2">
-            Repo Url            
+             Web Url           
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HttpUrlToRepo)
+            @Html.DisplayFor(model => model.WebUrl)
         </dd>
+                                     
         <dt class = "col-sm-2">
-            last activity             
+            Visibility           
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastActivityAt)
-        </dd>                             
-        <dt class = "col-sm-2">
-            Default Branch           
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DefaultBranch)
+            @Html.DisplayFor(model => model.Visibility)
         </dd>          
     </dl>
 </div>
@@ -87,7 +88,7 @@
     <script>  
         var DoughnutChartData =  
             {  
-                labels: @Json.Serialize( Model.Metrics.DeploymentFrequency.Select(d => d.Date)),  
+                labels: @Json.Serialize( Model.Metrics.DeploymentFrequency.Select(d => d.Date)) ,  
 
                 datasets: [{  
                     label: 'Deployment Frequency',                      
@@ -146,6 +147,40 @@
             }  
     </script>
         
+
+
+<div class="row m-2">
+
+	@foreach (var project in Model.Projects)
+	{
+	 <div class="col-3 ">
+	  <div class="p-0 my-3 border">
+	   <div class="card">
+					@if (!String.IsNullOrEmpty(project.AvatarUrl))
+					{
+						<img src="@project.AvatarUrl" class="card-img-top">
+					}else{
+						<img src="~/581057-200.png" class="card-img-top">
+					}
+
+		<div class="card-body">
+		 <h3 class="card-title text-success">@project.Name</h3>
+		 <h4 class="card-title text-primary">@project.CreatedAt</h4>
+		 <p class="card-text">@project.Description</p>
+		 <div class="row">
+		  <div class="col">
+		   <a asp-controller="Home" asp-action="GitlabProjectDetails" asp-route-id="@project.GitlabProjectId"
+							   class="btn btn-success form-control">Details</a>
+		  </div>
+		 </div>
+		</div>
+	   </div>
+	  </div>
+	 </div>
+	}
+
+</div>
+
 <div>    
     <a asp-action="Index">Back to List</a>
 </div>

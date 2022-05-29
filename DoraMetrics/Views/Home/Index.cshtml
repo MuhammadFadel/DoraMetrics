@@ -1,5 +1,5 @@
 ﻿@using Data.Entities
-@model IEnumerable<Project>
+@model IEnumerable<Group>
 
 @{
 	ViewData["Title"] = "Home Page";
@@ -9,25 +9,25 @@
 
 <div class="container row">
 
-	@foreach (var project in Model)
+	@foreach (var group in Model)
 	{
-	 <div class="col-4 ">
+	 <div class="col-3 ">
 	  <div class="p-0 my-3 border">
 	   <div class="card">
-					@if (!String.IsNullOrEmpty(project.AvatarUrl))
+					@if (!String.IsNullOrEmpty(group.AvatarUrl))
 					{
-						<img src="@project.AvatarUrl" class="card-img-top">
+						<img src="@group.AvatarUrl" class="card-img-top">
 					}else{
 						<img src="~/581057-200.png" class="card-img-top">
 					}
 
 		<div class="card-body">
-		 <h3 class="card-title text-success">@project.Name</h3>
-		 <h4 class="card-title text-primary">@project.NameWithNamespace</h4>
-		 <p class="card-text">@project.Description</p>
+		 <h3 class="card-title text-success">@group.Name</h3>
+		 <h4 class="card-title text-primary">@group.CreatedAt</h4>
+		 <p class="card-text">@group.Description</p>
 		 <div class="row">
 		  <div class="col">
-		   <a asp-controller="Home" asp-action="GitlabProjectDetails" asp-route-id="@project.GitlabProjectId"
+		   <a asp-controller="Home" asp-action="GitlabGroupDetails" asp-route-id="@group.GitlabGroupId"
 							   class="btn btn-success form-control">Details</a>
 		  </div>
 		 </div>

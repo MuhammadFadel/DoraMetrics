@@ -30,13 +30,16 @@ namespace DoraMetrics
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(connectionString));
             services.AddControllersWithViews();
 
-            // Services Added to Container
-            services.AddHttpClient<IProjectServices, ProjectServices>();
+            // Gitlab Services Configurations
             SD.GitlabApiBase = Configuration["GitlabService:GitlabApiUrl"];
+            services.AddHttpClient<IProjectServices, ProjectServices>();            
             services.AddScoped<IProjectServices, ProjectServices>();
+            services.AddHttpClient<IGroupServices, GroupServices>();
+            services.AddScoped<IGroupServices, GroupServices>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProjectRepo, ProjectRepo>();            
+            services.AddScoped<IGroupRepo, GroupRepo>();            
             services.AddAutoMapper(typeof(AutoMapperProfiles));
         }
 

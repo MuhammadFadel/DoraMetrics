@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Integrations.GitlabServices
 {
-    internal interface IGroupServices
+    public interface IGroupServices
     {
         Task<T> GetGroupByIdAsync<T>(int id, string token);
         Task<T> GetGroupsAsync<T>(string token);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DoraMetrics.DTOs
 {
@@ -9,6 +10,8 @@ namespace DoraMetrics.DTOs
         public string path { get; set; }
         public string description { get; set; }
         public string visibility { get; set; }
+        public List<GitlabProjectDto> projects { get; set; }
+        public DoraMetricsAnalyticsDto DoraMetricsAnalytics { get; set; }
         public bool share_with_group_lock { get; set; }
         public bool require_two_factor_authentication { get; set; }
         public int two_factor_grace_period { get; set; }
@@ -22,7 +25,7 @@ namespace DoraMetrics.DTOs
         public string full_name { get; set; }
         public string full_path { get; set; }
         public int file_template_project_id { get; set; }
-        public int parent_id { get; set; }
+        public object parent_id { get; set; }
         public DateTime created_at { get; set; }
     }
 }

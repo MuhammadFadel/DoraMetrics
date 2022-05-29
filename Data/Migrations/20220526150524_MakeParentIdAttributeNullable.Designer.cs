@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220526150524_MakeParentIdAttributeNullable")]
+    partial class MakeParentIdAttributeNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -196,21 +198,13 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ProjectId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId")
-                        .IsUnique()
-                        .HasFilter("[GroupId] IS NOT NULL");
-
                     b.HasIndex("ProjectId")
-                        .IsUnique()
-                        .HasFilter("[ProjectId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Metrics");
                 });
@@ -340,15 +334,11 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.Metrics", b =>
                 {
-                    b.HasOne("Data.Entities.Group", "Group")
-                        .WithOne("Metrics")
-                        .HasForeignKey("Data.Entities.Metrics", "GroupId");
-
                     b.HasOne("Data.Entities.Project", "Project")
                         .WithOne("Metrics")
-                        .HasForeignKey("Data.Entities.Metrics", "ProjectId");
-
-                    b.Navigation("Group");
+                        .HasForeignKey("Data.Entities.Metrics", "ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Project");
                 });
@@ -389,8 +379,6 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.Group", b =>
                 {
-                    b.Navigation("Metrics");
-
                     b.Navigation("Projects");
                 });
 

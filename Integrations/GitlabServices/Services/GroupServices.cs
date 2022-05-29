@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Integrations.GitlabServices.Services
 {
-    internal class GroupServices : BaseService, IGroupServices
+    public class GroupServices : BaseService, IGroupServices
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -22,7 +22,7 @@ namespace Integrations.GitlabServices.Services
             return await this.SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.GET,
-                ApiUrl = SD.GitlabApiBase + "groups" + "?min_access_level=40",
+                ApiUrl = SD.GitlabApiBase + "groups", //+ "?min_access_level=40",
                 AccessToken = token
             });
         }

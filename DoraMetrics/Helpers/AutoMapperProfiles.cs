@@ -22,8 +22,10 @@ namespace DoraMetrics.Helpers
 
             CreateMap<Group, GitlabGroupDto>();
             CreateMap<GitlabGroupDto, Group>()
+                .ForMember(m => m.Metrics, opt => opt.MapFrom(s => s.DoraMetricsAnalytics))
                 .ForMember(m => m.GitlabGroupId, opt => opt.MapFrom(s => s.id))
                 .ForMember(m => m.Id, opt => opt.Ignore());                
+                                
 
             CreateMap<Links, LinksDto>();
             CreateMap<LinksDto, Links>();

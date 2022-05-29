@@ -16,6 +16,7 @@ namespace Data.Entities
         public string Path { get; set; }
         public string Description { get; set; }
         public List<Project> Projects { get; set; }
+        public Metrics Metrics { get; set; }
         public string Visibility { get; set; }
         public bool ShareWithGroupLock { get; set; }
         public bool RequireTwoFactorAuthentication { get; set; }
@@ -30,7 +31,7 @@ namespace Data.Entities
         public string FullName { get; set; }
         public string FullPath { get; set; }
         public int FileTemplateProjectId { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }  = null;
         public DateTime CreatedAt { get; set; }
     }
 }
