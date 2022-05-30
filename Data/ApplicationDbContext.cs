@@ -15,7 +15,6 @@ namespace Data
         public DbSet<Links> Links{ get; set; }
         public DbSet<Permissions> Permissions{ get; set; }
         public DbSet<AccessInfo> AccessInfos{ get; set; }
-        public DbSet<Metrics> Metrics { get; set; }
-        public DbSet<MetricData> MetricData { get; set; }               
+        public DbSet<Metrics> Metrics { get; set; }                       
     }
 }

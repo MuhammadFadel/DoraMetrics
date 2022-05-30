@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DoraMetrics.Controllers
@@ -99,82 +100,30 @@ namespace DoraMetrics.Controllers
             return View();
         }
 
-        public async Task<List<MetricValueDto>> GitlabProjectChangeFailureRate(int id)
-        {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var projectChangeFailureRateResponse = await _gitlabProjectServices.GetProjectChangeFailureRate<ApiResponse>(id, accessToken);
-            if (projectChangeFailureRateResponse != null && projectChangeFailureRateResponse.IsSuccess)
-            {
-                var ChangeFailureRate =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(projectChangeFailureRateResponse.Result));
-                var project = await _projectRepo.GetProjectWithGitlabId(id);
-                foreach (var cfr in ChangeFailureRate)
-                {
-                    //if(project.Metrics.ChangeFailureRate)
-                }
-                return ChangeFailureRate;
-            }
-            return null;
-        }
-        public async Task<List<MetricValueDto>> GitlabProjectDeploymentFrequency(int id)
-        {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var projectDeploymentFrequencyResponse = await _gitlabProjectServices.GetProjectDeploymentFrequency<ApiResponse>(id, accessToken);
-            if (projectDeploymentFrequencyResponse != null && projectDeploymentFrequencyResponse.IsSuccess)
-            {
-                var DeploymentFrequency =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(projectDeploymentFrequencyResponse.Result));
-                return DeploymentFrequency;
-            }
-            return null;
-        }
-        public async Task<List<MetricValueDto>> GitlabProjectLeadTimeForChanges(int id)
-        {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var projectLeadTimeForChangesResponse = await _gitlabProjectServices.GetProjectLeadTimeForChanges<ApiResponse>(id, accessToken);
-            if (projectLeadTimeForChangesResponse != null && projectLeadTimeForChangesResponse.IsSuccess)
-            {
-                var LeadTimeForChanges =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(projectLeadTimeForChangesResponse.Result));
-                return LeadTimeForChanges;
-            }
-            return null;
-        }
-        public async Task<List<MetricValueDto>> GitlabProjectTimeToRestoreService(int id)
-        {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var projectTimeToRestoreServiceResponse = await _gitlabProjectServices.GetProjectTimeToRestoreService<ApiResponse>(id, accessToken);
-            if (projectTimeToRestoreServiceResponse != null && projectTimeToRestoreServiceResponse.IsSuccess)
-            {
-                var TimeToRestoreService =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(projectTimeToRestoreServiceResponse.Result));
-                return TimeToRestoreService;
-            }
-            return null;
-        }
-
         public async Task<IActionResult> GitlabProjectDetails(int id)
         {
             var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
             var projectResponse = await _gitlabProjectServices.GetProjectByIdAsync<ApiResponse>(id, accessToken);
             if (projectResponse != null && projectResponse.IsSuccess)
             {
-                var projectDto = JsonConvert.DeserializeObject<GitlabProjectDto>(Convert.ToString(projectResponse.Result));
+                var projectDto = JsonConvert.DeserializeObject<GitlabProjectDto>(Convert.ToString(projectResponse.Result));                
+                var mappedProject = _mapper.Map<Project>(projectDto);                
 
-                projectDto.DoraMetricsAnalytics = new DoraMetricsAnalyticsDto()
-                {
-                    ChangeFailureRate = await GitlabProjectChangeFailureRate(id),
-                    DeploymentFrequency = await GitlabProjectDeploymentFrequency(id),
-                    LeadTimeForChanges = await GitlabProjectLeadTimeForChanges(id),
-                    TimeToRestoreService = await GitlabProjectLeadTimeForChanges(id)
-                };
-
-                var mappedProject = _mapper.Map<Project>(projectDto);
                 var dbProject = await _projectRepo.GetProjectWithGitlabId(mappedProject.GitlabProjectId);
-
                 if (dbProject != null)
                 {
+                    mappedProject.Metrics = dbProject.Metrics;
                     dbProject.MappingUpdates(mappedProject, true, 2);
+
+                    dbProject.Metrics = MappingMetrics(dbProject.Metrics, await GetGitlabMetric(id, Enums.MetricType.ChangeFailureRate, Enums.ProjectType.Project),
+                        Enums.MetricType.ChangeFailureRate, Enums.ProjectType.Project);
+                    dbProject.Metrics = MappingMetrics(dbProject.Metrics, await GetGitlabMetric(id, Enums.MetricType.DeploymentFrequency, Enums.ProjectType.Project),
+                        Enums.MetricType.DeploymentFrequency, Enums.ProjectType.Project);
+                    dbProject.Metrics = MappingMetrics(dbProject.Metrics, await GetGitlabMetric(id, Enums.MetricType.LeadTimeForChanges, Enums.ProjectType.Project),
+                        Enums.MetricType.LeadTimeForChanges, Enums.ProjectType.Project);
+                    dbProject.Metrics = MappingMetrics(dbProject.Metrics, await GetGitlabMetric(id, Enums.MetricType.TimeToRestoreService, Enums.ProjectType.Project),
+                        Enums.MetricType.TimeToRestoreService, Enums.ProjectType.Project);
+                    
                     _db.Update(dbProject);
                 }
                 else if (await _groupRepo.GroupIsExist(projectDto.@namespace.id))
@@ -200,84 +149,112 @@ namespace DoraMetrics.Controllers
             var groupResponse = await _gitlabGroupServices.GetGroupByIdAsync<ApiResponse>(id, accessToken);
             if (groupResponse != null && groupResponse.IsSuccess)
             {
-                var groupDto = JsonConvert.DeserializeObject<GitlabGroupDto>(Convert.ToString(groupResponse.Result));
+                var groupDto = JsonConvert.DeserializeObject<GitlabGroupDto>(Convert.ToString(groupResponse.Result));                
+                var mappedGroup = _mapper.Map<Group>(groupDto);                              
 
-                groupDto.DoraMetricsAnalytics = new DoraMetricsAnalyticsDto()
-                {
-                    ChangeFailureRate = await GitlabGroupChangeFailureRate(id),
-                    DeploymentFrequency = await GitlabGroupDeploymentFrequency(id),
-                    LeadTimeForChanges = await GitlabGroupLeadTimeForChanges(id),
-                    TimeToRestoreService = await GitlabGroupTimeToRestoreService(id)
-                };
-
-                var mappedGroup = _mapper.Map<Group>(groupDto);
-
-                if (!await _groupRepo.GroupIsExist(mappedGroup.GitlabGroupId))
+                var dbGroup = await _groupRepo.GetGroupWithGitlabId(mappedGroup.GitlabGroupId);
+                if (dbGroup == null)
                 {
                     _db.Add(mappedGroup);
                     try { await _db.SaveAll(); }
                     catch (Exception ex) { throw new Exception(ex.Message); }
+                    dbGroup = mappedGroup;
                 }
+                if (dbGroup != null)
+                {
+                    mappedGroup.Metrics = dbGroup.Metrics;
+                    dbGroup.MappingUpdates(mappedGroup, true, 2);
+
+                    dbGroup.Metrics = MappingMetrics(dbGroup.Metrics, await GetGitlabMetric(id, Enums.MetricType.ChangeFailureRate, Enums.ProjectType.Group),
+                        Enums.MetricType.ChangeFailureRate, Enums.ProjectType.Group);
+                    dbGroup.Metrics = MappingMetrics(dbGroup.Metrics, await GetGitlabMetric(id, Enums.MetricType.DeploymentFrequency, Enums.ProjectType.Group),
+                        Enums.MetricType.DeploymentFrequency, Enums.ProjectType.Group);
+                    dbGroup.Metrics = MappingMetrics(dbGroup.Metrics, await GetGitlabMetric(id, Enums.MetricType.LeadTimeForChanges, Enums.ProjectType.Group),
+                        Enums.MetricType.LeadTimeForChanges, Enums.ProjectType.Group);
+                    dbGroup.Metrics = MappingMetrics(dbGroup.Metrics, await GetGitlabMetric(id, Enums.MetricType.TimeToRestoreService, Enums.ProjectType.Group),
+                        Enums.MetricType.TimeToRestoreService, Enums.ProjectType.Group);
+                    
+                    _db.Update(dbGroup);                    
+                }
+                
+                try { await _db.SaveAll(); }
+                catch (Exception ex) { throw new Exception(ex.Message); }
+
                 return View(mappedGroup);
             }
             return View();
         }
 
-
-        public async Task<List<MetricValueDto>> GitlabGroupChangeFailureRate(int id)
+        public List<Metrics> MappingMetrics(List<Metrics> metrics, List<MetricValueDto> metricValueDto, 
+            Enums.MetricType metricType, Enums.ProjectType projectType) 
         {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var groupChangeFailureRateResponse = await _gitlabGroupServices.GetGroupChangeFailureRate<ApiResponse>(id, accessToken);
-            if (groupChangeFailureRateResponse != null && groupChangeFailureRateResponse.IsSuccess)
+            if(metrics != null && metricValueDto != null)
             {
-                var ChangeFailureRate =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(groupChangeFailureRateResponse.Result));
-                var project = await _projectRepo.GetProjectWithGitlabId(id);
-                foreach (var cfr in ChangeFailureRate)
+                foreach (var metric in metricValueDto)
                 {
-                    //if(project.Metrics.ChangeFailureRate)
-                }
-                return ChangeFailureRate;
-            }
-            return null;
-        }
-        public async Task<List<MetricValueDto>> GitlabGroupDeploymentFrequency(int id)
-        {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var groupDeploymentFrequencyResponse = await _gitlabGroupServices.GetGroupDeploymentFrequency<ApiResponse>(id, accessToken);
-            if (groupDeploymentFrequencyResponse != null && groupDeploymentFrequencyResponse.IsSuccess)
-            {
-                var DeploymentFrequency =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(groupDeploymentFrequencyResponse.Result));
-                return DeploymentFrequency;
-            }
-            return null;
-        }
-        public async Task<List<MetricValueDto>> GitlabGroupLeadTimeForChanges(int id)
-        {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var groupLeadTimeForChangesResponse = await _gitlabGroupServices.GetGroupLeadTimeForChanges<ApiResponse>(id, accessToken);
-            if (groupLeadTimeForChangesResponse != null && groupLeadTimeForChangesResponse.IsSuccess)
-            {
-                var LeadTimeForChanges =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(groupLeadTimeForChangesResponse.Result));
-                return LeadTimeForChanges;
-            }
-            return null;
-        }
-        public async Task<List<MetricValueDto>> GitlabGroupTimeToRestoreService(int id)
-        {
-            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
-            var groupTimeToRestoreServiceResponse = await _gitlabGroupServices.GetGroupTimeToRestoreService<ApiResponse>(id, accessToken);
-            if (groupTimeToRestoreServiceResponse != null && groupTimeToRestoreServiceResponse.IsSuccess)
-            {
-                var TimeToRestoreService =
-                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(groupTimeToRestoreServiceResponse.Result));
-                return TimeToRestoreService;
-            }
-            return null;
-        }
 
+                    var mappedMetric = metrics.Find(m => m.Date == metric.date && m.MetricType == metricType && m.ProjectType == projectType);
+                    if (mappedMetric != null)
+                        mappedMetric.Value = metric.value;
+                    else
+                        metrics.Add(new Metrics
+                        {
+                            MetricType = metricType,
+                            ProjectType = projectType,
+                            Date = metric.date,
+                            Value = metric.value
+                        });
+                }                                   
+            }
+            return metrics;
+        }
+        
+        public async Task<List<MetricValueDto>> GetGitlabMetric(int id, Enums.MetricType metricType, Enums.ProjectType projectType)
+        {
+            var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
+            ApiResponse apiResponse = null;
+            switch (metricType)
+            {
+                case Enums.MetricType.DeploymentFrequency:
+                    if(projectType == Enums.ProjectType.Project)
+                        apiResponse = await _gitlabProjectServices.GetProjectDeploymentFrequency<ApiResponse>(id, accessToken);
+                    else if (projectType == Enums.ProjectType.Group)
+                        apiResponse = await _gitlabGroupServices.GetGroupDeploymentFrequency<ApiResponse>(id, accessToken);
+                    break;
+
+                case Enums.MetricType.LeadTimeForChanges:
+                    if (projectType == Enums.ProjectType.Project)
+                        apiResponse = await _gitlabProjectServices.GetProjectLeadTimeForChanges<ApiResponse>(id, accessToken);
+                    else if (projectType == Enums.ProjectType.Group)
+                        apiResponse = await _gitlabGroupServices.GetGroupLeadTimeForChanges<ApiResponse>(id, accessToken);
+                    break;
+
+                case Enums.MetricType.TimeToRestoreService:
+                    if (projectType == Enums.ProjectType.Project)
+                        apiResponse = await _gitlabProjectServices.GetProjectTimeToRestoreService<ApiResponse>(id, accessToken);
+                    else if (projectType == Enums.ProjectType.Group)
+                        apiResponse = await _gitlabGroupServices.GetGroupTimeToRestoreService<ApiResponse>(id, accessToken);
+                    break;
+
+                case Enums.MetricType.ChangeFailureRate:
+                    if (projectType == Enums.ProjectType.Project)
+                        apiResponse = await _gitlabProjectServices.GetProjectChangeFailureRate<ApiResponse>(id, accessToken);
+                    else if (projectType == Enums.ProjectType.Group)
+                        apiResponse = await _gitlabGroupServices.GetGroupChangeFailureRate<ApiResponse>(id, accessToken);
+                    break;
+
+                default:
+                    break;
+            }
+            
+            if (apiResponse != null && apiResponse.IsSuccess)
+            {
+                var metricValueDto =
+                    JsonConvert.DeserializeObject<List<MetricValueDto>>(Convert.ToString(apiResponse.Result));                
+                return metricValueDto;
+            }
+            return null;
+        }
 
         public IActionResult Privacy()
         {

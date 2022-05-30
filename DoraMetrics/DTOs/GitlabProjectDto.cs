@@ -17,8 +17,7 @@ namespace DoraMetrics.DTOs
         public string readme_url { get; set; }
         public List<string> tag_list { get; set; }
         public List<string> topics { get; set; }
-        public OwnerDto owner { get; set; }
-        public DoraMetricsAnalyticsDto DoraMetricsAnalytics { get; set; }
+        public OwnerDto owner { get; set; }        
         public string name { get; set; }
         public string name_with_namespace { get; set; }
         public string path { get; set; }

@@ -35,6 +35,13 @@ namespace Data.Repos
             return product;
         }
 
+        public async Task<Metrics> GetProjectMetrics(int id)
+        {
+            return await _context.Metrics
+                                .FirstOrDefaultAsync(p =>  p.Id == id && p.ProjectType == Enums.ProjectType.Project);
+        }
+
+
         public async Task<PagedList<Project>> GetProjects(ProjectParams projectParams)
         {
             var products = _context.Projects                            

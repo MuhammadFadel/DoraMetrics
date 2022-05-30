@@ -10,8 +10,7 @@ namespace DoraMetrics.DTOs
         public string path { get; set; }
         public string description { get; set; }
         public string visibility { get; set; }
-        public List<GitlabProjectDto> projects { get; set; }
-        public DoraMetricsAnalyticsDto DoraMetricsAnalytics { get; set; }
+        public List<GitlabProjectDto> projects { get; set; }        
         public bool share_with_group_lock { get; set; }
         public bool require_two_factor_authentication { get; set; }
         public int two_factor_grace_period { get; set; }

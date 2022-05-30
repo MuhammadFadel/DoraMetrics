@@ -87,21 +87,24 @@
     <script>  
         var DoughnutChartData =  
             {  
-                labels: @Json.Serialize( Model.Metrics.DeploymentFrequency.Select(d => d.Date)),  
+                labels: @Json.Serialize( Model.Metrics.Where(c => c.MetricType == Data.Enums.MetricType.DeploymentFrequency
+                        && c.ProjectType == Data.Enums.ProjectType.Group).Select(d => d.Date)),  
 
                 datasets: [{  
                     label: 'Deployment Frequency',                      
                     backgroundColor: "#f990a7",
                     borderColor: "#f990a7",
                    borderWidth: 2,  
-                    data: @Json.Serialize( Model.Metrics.DeploymentFrequency.Select(d => d.Value))  
+                    data: @Json.Serialize( Model.Metrics.Where(c => c.MetricType == Data.Enums.MetricType.DeploymentFrequency
+                        && c.ProjectType == Data.Enums.ProjectType.Group).Select(d => d.Value))  
                 },
                 {
                     label: 'Change Failure Rate',                      
                     backgroundColor:"#aad2ed",
                     borderColor: "#aad2ed",
                     borderWidth: 2,  
-                    data: @Json.Serialize( Model.Metrics.ChangeFailureRate.Select(d => d.Value))
+                    data: @Json.Serialize( Model.Metrics.Where(c => c.MetricType == Data.Enums.MetricType.ChangeFailureRate
+                        && c.ProjectType == Data.Enums.ProjectType.Group).Select(d => d.Value))
                     },
                     
                     {
@@ -109,7 +112,8 @@
                     backgroundColor: "#9966FF",  
                     borderColor: "#9966FF",
                     borderWidth: 2,  
-                    data: @Json.Serialize( Model.Metrics.LeadTimeForChanges.Select(d => d.Value))
+                    data: @Json.Serialize( Model.Metrics.Where(c => c.MetricType == Data.Enums.MetricType.LeadTimeForChanges
+                        && c.ProjectType == Data.Enums.ProjectType.Group).Select(d => d.Value))
                     },
                     
                     {
@@ -117,7 +121,8 @@
                     backgroundColor: "#99e5e5",  
                     borderColor: "#99e5e5",
                     borderWidth: 2,  
-                    data: @Json.Serialize( Model.Metrics.TimeToRestoreService.Select(d => d.Value))
+                    data: @Json.Serialize( Model.Metrics.Where(c => c.MetricType == Data.Enums.MetricType.TimeToRestoreService
+                        && c.ProjectType == Data.Enums.ProjectType.Group).Select(d => d.Value))
                     }]  
             };  
   

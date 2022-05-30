@@ -10,7 +10,7 @@ namespace Data.Entities
         [Key]
         public int Id { get; set; }
         public int GitlabProjectId { get; set; }                               
-        public Metrics Metrics { get; set; }                               
+        public List<Metrics> Metrics { get; set; }                               
         public Links Links { get; set; }        
         public Permissions Permissions { get; set; }
         [ForeignKey("Group")]

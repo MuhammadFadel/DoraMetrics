@@ -27,14 +27,16 @@ namespace Data.Repos
         {
             var group = await _context.Groups
                                 .Include(pr => pr.Projects)
-                                .Include(mt => mt.Metrics)
-                                //.Include(mt => mt.Metrics.DeploymentFrequency)
-                                //.Include(mt => mt.Metrics.ChangeFailureRate)
-                                //.Include(mt => mt.Metrics.LeadTimeForChanges)
-                                //.Include(mt => mt.Metrics.TimeToRestoreService)
-                                .FirstOrDefaultAsync(p => p.GitlabGroupId == id);
-
+                                .Include(mt => mt.Metrics)                                
+                                .FirstOrDefaultAsync(p => p.GitlabGroupId == id);            
             return group;
+        }
+
+
+        public async Task<Metrics> GetGroupMetrics(int id)
+        {
+            return await _context.Metrics                               
+                                .FirstOrDefaultAsync(p => p.Id == id && p.ProjectType == Enums.ProjectType.Group);           
         }
 
         public async Task<List<Group>> GetGroups()
@@ -50,5 +52,7 @@ namespace Data.Repos
             var group = await _context.Groups.FirstOrDefaultAsync(gr => gr.Id == id || gr.GitlabGroupId == id);
             return (group != null) ? true : false; 
         }
+
+        
     }
 }

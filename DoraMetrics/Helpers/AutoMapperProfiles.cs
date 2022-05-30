@@ -14,15 +14,13 @@ namespace DoraMetrics.Helpers
             DestinationMemberNamingConvention = new PascalCaseNamingConvention();
 
             CreateMap<Project, GitlabProjectDto>();
-            CreateMap<GitlabProjectDto, Project>()                
-                .ForMember(m => m.Metrics, opt => opt.MapFrom(s => s.DoraMetricsAnalytics))
+            CreateMap<GitlabProjectDto, Project>()                                
                 .ForMember(m => m.GitlabProjectId, opt => opt.MapFrom(s => s.id))
                 .ForMember(m => m.Id, opt => opt.Ignore())                
                 .ForMember(m => m.Links, opt => opt.MapFrom(s => s._links));
 
             CreateMap<Group, GitlabGroupDto>();
-            CreateMap<GitlabGroupDto, Group>()
-                .ForMember(m => m.Metrics, opt => opt.MapFrom(s => s.DoraMetricsAnalytics))
+            CreateMap<GitlabGroupDto, Group>()                
                 .ForMember(m => m.GitlabGroupId, opt => opt.MapFrom(s => s.id))
                 .ForMember(m => m.Id, opt => opt.Ignore());                
                                 
@@ -39,11 +37,7 @@ namespace DoraMetrics.Helpers
             CreateMap<GroupAccessDto, AccessInfo>();            
 
             CreateMap<DoraMetricsAnalyticsDto, Metrics>();
-            CreateMap<Metrics, DoraMetricsAnalyticsDto>();
-
-            CreateMap<MetricData, MetricValueDto>();
-            CreateMap<MetricValueDto, MetricData>();
-
+            CreateMap<Metrics, DoraMetricsAnalyticsDto>();            
         }
     }
 }

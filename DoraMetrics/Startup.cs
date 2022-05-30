@@ -9,7 +9,7 @@ using Integrations.GitlabServices;
 using Integrations.GitlabServices.Services;
 using Data;
 using Data.Repos;
-using Helpers.ClientServices;
+using SD = Helpers.ClientServices.SD;
 
 namespace DoraMetrics
 {

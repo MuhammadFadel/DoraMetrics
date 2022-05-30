@@ -16,7 +16,7 @@ namespace Data.Entities
         public string Path { get; set; }
         public string Description { get; set; }
         public List<Project> Projects { get; set; }
-        public Metrics Metrics { get; set; }
+        public List<Metrics> Metrics { get; set; }
         public string Visibility { get; set; }
         public bool ShareWithGroupLock { get; set; }
         public bool RequireTwoFactorAuthentication { get; set; }
