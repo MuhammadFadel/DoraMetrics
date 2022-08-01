@@ -10,6 +10,8 @@ using Integrations.GitlabServices.Services;
 using Data;
 using Data.Repos;
 using SD = Helpers.ClientServices.SD;
+using Integrations.JiraServices;
+using Integrations.JiraServices.Services;
 
 namespace DoraMetrics
 {
@@ -32,11 +34,14 @@ namespace DoraMetrics
 
             // Gitlab Services Configurations
             SD.GitlabApiBase = Configuration["GitlabService:GitlabApiUrl"];
+            SD.JiraApiBase = Configuration["JiraService:JiraApiUrl"];
             services.AddHttpClient<IProjectServices, ProjectServices>();            
             services.AddScoped<IProjectServices, ProjectServices>();
             services.AddHttpClient<IGroupServices, GroupServices>();
             services.AddScoped<IGroupServices, GroupServices>();
+            services.AddScoped<IIssueServices, IssueServices>();
 
+            services.AddScoped<IIssueEventRepo, IssueEventRepo>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IProjectRepo, ProjectRepo>();            
             services.AddScoped<IGroupRepo, GroupRepo>();            

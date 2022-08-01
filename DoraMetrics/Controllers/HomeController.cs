@@ -6,6 +6,7 @@ using DoraMetrics.Models;
 using Helpers.ClientServices;
 using Helpers.Extentions;
 using Integrations.GitlabServices;
+using Integrations.JiraServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -14,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DoraMetrics.Controllers
@@ -27,11 +29,14 @@ namespace DoraMetrics.Controllers
         private readonly IMapper _mapper;
         public readonly IProjectRepo _projectRepo;
         public readonly IGroupRepo _groupRepo;
+        private readonly IIssueServices _issueServices;
+        private readonly IIssueEventRepo _issueEventRepo;
         private readonly IUnitOfWork _db;
 
         public HomeController(ILogger<HomeController> logger, IConfiguration configuration,
             IProjectServices gitlabProjectServices, IMapper mapper, IProjectRepo projectRepo,
-            IUnitOfWork db, IGroupServices gitlabGroupServices, IGroupRepo groupRepo)
+            IUnitOfWork db, IGroupServices gitlabGroupServices, IGroupRepo groupRepo,
+            IIssueServices issueServices, IIssueEventRepo issueEventRepo)
         {
             _logger = logger;
             _config = configuration;
@@ -41,6 +46,8 @@ namespace DoraMetrics.Controllers
             _db = db;
             _gitlabGroupServices = gitlabGroupServices;
             _groupRepo = groupRepo;
+            _issueServices = issueServices;
+            _issueEventRepo = issueEventRepo;
         }
 
 
@@ -63,7 +70,7 @@ namespace DoraMetrics.Controllers
             }
             return View();
         }
-
+                
         public async Task<IActionResult> GitlabProjects()
         {
             var accessToken = _config.GetSection("GitlabService:ApiToken").Value;
@@ -71,7 +78,7 @@ namespace DoraMetrics.Controllers
             if (response != null && response.IsSuccess)
             {
                 var projectsDto = JsonConvert.DeserializeObject<List<GitlabProjectDto>>(Convert.ToString(response.Result));
-                var projects = _mapper.Map<IEnumerable<Project>>(projectsDto);
+                var projects = _mapper.Map<IEnumerable<Data.Entities.Project>>(projectsDto);
 
                 foreach (var project in projects)
                 {
@@ -107,7 +114,7 @@ namespace DoraMetrics.Controllers
             if (projectResponse != null && projectResponse.IsSuccess)
             {
                 var projectDto = JsonConvert.DeserializeObject<GitlabProjectDto>(Convert.ToString(projectResponse.Result));                
-                var mappedProject = _mapper.Map<Project>(projectDto);                
+                var mappedProject = _mapper.Map<Data.Entities.Project>(projectDto);                
 
                 var dbProject = await _projectRepo.GetProjectWithGitlabId(mappedProject.GitlabProjectId);
                 if (dbProject != null)

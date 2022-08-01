@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220731133605_addJiraIssueModule")]
+    partial class addJiraIssueModule
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,8 +91,8 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Created")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("CreatorId")
                         .HasColumnType("int");
@@ -104,11 +106,14 @@ namespace Data.Migrations
                     b.Property<int>("PriorityId")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ReporterId")
                         .HasColumnType("int");
 
-                    b.Property<string>("StatusCtegoryChangeDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("StatusCtegoryChangeDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
@@ -116,14 +121,14 @@ namespace Data.Migrations
                     b.Property<string>("Summary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Updated")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("WatchesId")
                         .HasColumnType("int");
 
-                    b.Property<string>("lastViewed")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("lastViewed")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("FieldsId");
 
@@ -132,6 +137,8 @@ namespace Data.Migrations
                     b.HasIndex("IssueTypeId");
 
                     b.HasIndex("PriorityId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("ReporterId");
 
@@ -336,8 +343,8 @@ namespace Data.Migrations
                     b.Property<bool>("Paid")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PaidAt")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("PaidAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<long>("Timestamp")
                         .HasColumnType("bigint");
@@ -712,6 +719,12 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Data.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Data.Entities.Reporter", "Reporter")
                         .WithMany()
                         .HasForeignKey("ReporterId")
@@ -735,6 +748,8 @@ namespace Data.Migrations
                     b.Navigation("IssueType");
 
                     b.Navigation("Priority");
+
+                    b.Navigation("Project");
 
                     b.Navigation("Reporter");
 
